@@ -1,0 +1,27 @@
+<% provide(:title, 'Sign up') %>
+<!--<h1>Sign up</h1>-->
+
+    <%= form_for(@user) do |f| %>
+      <%= render 'shared/error_messages' %>
+
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+
+      <%= f.label :email %>
+      <%= f.email_field :email %>
+
+      <%= f.label :password %>
+      <%= f.password_field :password %>
+
+      <%= f.label :password_confirmation, "Confirmation" %>
+      <%= f.password_field :password_confirmation %>
+
+      <% if %w[new create].include? (params[:action]) %>
+        <%= f.submit "Create Account", class: "btn btn-primary" %>
+      <% elsif %[update edit].include? (params[:action]) %>
+        <%= f.submit "Update Account", class: "btn btn-primary" %>
+      <% end %>
+
+    <% end %>
+
+<hr>
