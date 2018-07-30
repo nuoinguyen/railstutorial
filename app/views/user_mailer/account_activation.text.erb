@@ -1,8 +1,8 @@
 <h1>Sample App</h1>
-Hi <%= @current_user.name %>
+Hi <%= @user.name %>
 
 <p>
     Welcome to the Sample App! Click on the link below to activate your account:
 </p>
 
-<%= link_to 'Activate', edit_account_activations_path(@user.activation_token, email: @user.email) %>
+<%= edit_account_activations_url(@user.activation_token, email: @user.email) %>
