@@ -1,50 +1,72 @@
 module SessionsHelper
 
-  # login in the given user.
-  def log_in (user)
-    session[:user_id] = user.id
-  end
-
-  # Returns the user corresponding to the remember token cookie.
-  def current_user
-    if (user_id = session[:user_id])
-      @current_user ||= User.find_by(id: user_id)
-    elsif (user_id = cookies.signed[:user_id])
-      # raise     # The tests still pass, so this branch is currently untested.
-      user = User.find_by(id: user_id)
-      if user && user.authenticated?(cookies[:remember_token])
-        log_in user
-        @current_user = user
-      end
+    # login in the given user.
+    def log_in (user)
+        session[:user_id] = user.id
     end
-  end
 
-  def logged_in?
-    !current_user.nil?
-  end
+    # Returns true if the given user is the current user.
+    def current_user?(user)
+        user == current_user
+    end
 
-  def log_out
-    forget(current_user)
-    session.delete(:user_id)
-    @current_user = nil
-  end
+    # Returns the user corresponding to the remember token cookie.
+    def current_user
+        if (user_id = session[:user_id])
+            @current_user ||= User.find_by(id: user_id)
 
-  # Forgets a persistent session.
-  def forget (user)
-    user.forget
-    cookies.delete(:user_id)
-    cookies.delete(:remember_token)
-  end
+        elsif (user_id = cookies.signed[:user_id])
+            user = User.find_by(id: user_id)
 
-  # Remember a user in persistent sessions
-  def remember (user)
-    user.remember
-    cookies.permanent.signed[:user_id] = user.id
-    cookies.permanent[:remember_token] = user.remember_token
-  end
+            if user && user.authenticated?(:remember, cookies[:remember_token])
+                log_in user
+                @current_user = user
+            end
 
-  # Returns the user corresponding to the remember token cookie.
-  def correct_user?
-    user = @current_user
-  end
+        end
+    end
+
+    def logged_in?
+        !current_user.nil?
+    end
+
+    def log_out
+        forget(current_user)
+        session.delete(:user_id)
+
+        @current_user = nil
+    end
+
+    # Forgets a persistent session.
+    def forget (user)
+        user.forget
+
+        cookies.delete(:user_id)
+        cookies.delete(:remember_token)
+    end
+
+    # Remember a user in persistent sessions
+    def remember (user)
+        user.remember
+
+        cookies.permanent.signed[:user_id] = user.id
+        cookies.permanent[:remember_token] = user.remember_token
+    end
+
+    # Returns the user corresponding to the remember token cookie.
+    def correct_user?
+        user = @current_user
+    end
+
+    # Redirects to stored location (or to the default)
+    def redirect_back_or (default)
+        redirect_to(session[:forwading_url] || default)
+        session.delete(:forwarding_url)
+    end
+
+    # Stores the url trying to be accsessed
+    def store_location
+        session[:forwarding_url] = request.original_url if request.get?
+    end
+
 end
