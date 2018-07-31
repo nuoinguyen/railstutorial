@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     # GET /users.json
     def index
         # @users = User.paginate(page: params[:page])
-        @users = User.where(activated: 1).paginate(page: params[:page])
+        @users = User.where(activated: 1).paginate(page: params[:page], per_page: 10)
     end
 
     # GET /users/1
@@ -16,6 +16,7 @@ class UsersController < ApplicationController
     def show
         if logged_in?
             @user = User.find(params[:id])
+            @microposts = @user.microposts.paginate(page: params[:page], per_page: 6)
         else
             redirect_to users_path
         end

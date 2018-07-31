@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
+    # root 'home#index'
     root controller: :home, action: :index
+    
     namespace :pages do
         resource :about, controller: :about, only: [:index] do
             collection do
@@ -12,18 +14,23 @@ Rails.application.routes.draw do
             end
         end
 
-        # resource :about
         # get 'contact/index'
         # get 'about/index'
     end
-    # get 'home/index'
 
+    # get 'sessions/new'
     get '/login', to: 'sessions#new'
     post '/login', to: 'sessions#create'
     delete '/logout', to: 'sessions#destroy'
-    # get 'sessions/new'
+    
     resources :users
     
-    resource :account_activations, only: [:edit]
-    # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+    resources :account_activations, only: [:edit]
+
+    # get 'password_resers/new'
+    # get 'password_resers/edit'
+    resources :password_resets,     only: [:new, :create, :edit, :update]
+
+    resources :microposts,          only: [:create, :destroy]
+    
 end

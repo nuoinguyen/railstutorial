@@ -44,9 +44,13 @@ gem 'jbuilder', '~> 2.5'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 
+gem 'carrierwave',             '1.2.2'
+gem 'mini_magick',             '4.7.0'
+
 gem 'will_paginate',           '3.1.6'
 gem 'bootstrap-will_paginate', '1.0.0'
 
+gem 'dotenv-rails'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -76,3 +80,8 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 # gem 'active_model_serializers', '~>0.9.4'
 # gem 'mongoid-serializer', '~>0.0.5'
+
+group :production do
+  # gem 'pg',  '0.20.0'
+  gem 'fog', '1.42'
+end
